@@ -1,0 +1,17 @@
+Required production root files:
+- simulator.py
+- environment.py
+- agent.py
+- train.py
+- dashboard.py
+- api.py
+- utils.py
+- config.py
+
+Required production subfolders:
+- logs/
+- models/
+- data/
+- archive/
+
+
