@@ -23,16 +23,27 @@ Unlike traditional rule-based IDS systems, this platform uses Reinforcement Lear
 # 🔥 Key Features
 
 ✅ Reinforcement Learning-based Intrusion Detection
+
 ✅ Real-Time Cyber Threat Monitoring
+
 ✅ Explainable AI Decisions
+
 ✅ Dynamic Risk Scoring System
+
 ✅ Multi-Attack Detection Engine
+
 ✅ Honeypot Redirection Simulation
+
 ✅ Predictive Threat Intelligence
+
 ✅ Autonomous Recovery System
+
 ✅ SOC-Style Streamlit Dashboard
+
 ✅ Flask API Integration
+
 ✅ CSV Logging & Analytics
+
 ✅ Professional Cybersecurity UI
 
 ---
@@ -187,6 +198,7 @@ http://localhost:8501
 # 👨‍💻 Author
 
 AI & Cybersecurity Project
+
 Developed for research, learning, and intelligent cyber defense simulation.
 
 ---
