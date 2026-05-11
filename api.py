@@ -249,19 +249,26 @@ def create_app() -> Flask:
                 fieldnames=fieldnames,
             )
 
+            # Enterprise response contract (required keys)
             return jsonify(
                 {
-                    "action": pred["action"],
                     "attack_type": pred["attack_type"],
+                    "classifier_confidence": float(pred.get("classifier_confidence", 0.0)),
+                    "RL_action": pred["action"],
                     "risk_score": int(pred["risk_score"]),
-                    "predicted_risk": int(pred["predicted_risk"]),
-                    "confidence": pred["confidence"],
                     "severity": pred["severity_level"],
                     "explanation": pred["explanation"],
+                    "recommended_response": pred.get(
+                        "recommended_response",
+                        "N/A",
+                    ),
+                    # preserve existing optional fields
                     "honeypot_status": bool(pred.get("honeypot_status", False)),
+                    "honeypot_reason": str(pred.get("honeypot_reason", "")),
                     "latency_ms": latency_ms,
                 }
             )
+
 
 
         except PermissionError as e:
@@ -332,9 +339,11 @@ def create_app() -> Flask:
         except Exception as e:  # pragma: no cover
             return jsonify({"error": f"Server error: {e}"}), 500
 
-    @app.get("/health")
+    @app.route("/health", methods=["GET", "POST"])
     def health():
         return jsonify({"status": "ok"})
+
+
 
     return app
 

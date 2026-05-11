@@ -26,8 +26,10 @@ from typing import Literal
 
 @dataclass(frozen=True)
 class ExplainableDecision:
-    action: str  # "ALLOW" | "MONITOR" | "THROTTLE" | "BLOCK"
+    # Enterprise SOC actions
+    action: str  # "ALLOW" | "MONITOR" | "THROTTLE" | "BLOCK" | "ISOLATE_DEVICE" | "REDIRECT_TO_HONEYPOT"
     attack_type: str
+
 
     # current risk
     risk_score: int  # 0..100
@@ -145,8 +147,12 @@ def _final_explanation(
     isolated: bool,
 ) -> str:
 
+    # For enterprise actions: allow caller to pass any enterprise action via action_id mapping.
+    # Current codebase uses action_id for RL firewall actions (0..3). Enterprise layers may override
+    # the final action externally; here we keep explanation aligned to the passed action_id.
     action_str = _action_to_str(action_id)
     why_risk = _why_risk_increased(
+
         request_rate=request_rate,
         failed_logins=failed_logins,
         unknown_ip=unknown_ip,

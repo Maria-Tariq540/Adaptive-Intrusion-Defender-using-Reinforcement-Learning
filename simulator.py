@@ -352,23 +352,28 @@ def _sample_unknown_behavior(rng: random.Random, session_id: int) -> TrafficReco
 
 
 def _sample_scenario(rng: random.Random, session_id: int) -> TrafficRecord:
-    # Realistic-ish mix; attacks are less frequent than normal.
+    # Balanced-ish mix so the agent sees enough attack patterns.
+    # Target: ~50-60% attacks overall.
     p = rng.random()
-    if p < 0.55:
+
+    # Attacks (roughly 0.40..0.95)
+    if p < 0.40:
         return _sample_normal(rng, session_id)
-    if p < 0.64:
+
+    if p < 0.52:
         return _sample_port_scan(rng, session_id)
-    if p < 0.75:
+    if p < 0.63:
         return _sample_bot_traffic(rng, session_id)
-    if p < 0.83:
+    if p < 0.73:
         return _sample_brute_force(rng, session_id)
-    if p < 0.91:
+    if p < 0.82:
         return _sample_credential_stuffing(rng, session_id)
-    if p < 0.955:
+    if p < 0.88:
         return _sample_insider_threat(rng, session_id)
-    if p < 0.988:
+    if p < 0.94:
         return _sample_ddos(rng, session_id)
     return _sample_unknown_behavior(rng, session_id)
+
 
 
 

@@ -18,7 +18,6 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional
 
 
 
-
 def risk_score_to_levels(risk_score: int) -> tuple[str, str]:
     """Map 0..100 risk to (risk_label, severity_level).
 
@@ -39,7 +38,6 @@ def risk_score_to_levels(risk_score: int) -> tuple[str, str]:
     if rs <= 85:
         return ("Dangerous", "HIGH")
     return ("Critical", "CRITICAL")
-
 
 
 
@@ -101,6 +99,7 @@ def _ensure_parent_dir(path: Path) -> None:
         parent.mkdir(parents=True, exist_ok=True)
 
 
+
 def append_dicts_to_csv(
     rows: Iterable[Mapping[str, Any]],
     *,
@@ -122,6 +121,7 @@ def append_dicts_to_csv(
             writer.writeheader()
         for r in rows:
             writer.writerow({k: r.get(k, "") for k in fieldnames})
+
 
 
 def safe_append_prediction_to_csv(
@@ -148,9 +148,14 @@ def safe_append_prediction_to_csv(
             append_prediction_to_csv(row, csv_path=csv_path, fieldnames=fieldnames)
             return
 
-        # Normalize all values to single-field CSV-friendly strings/ints to
-        # avoid accidental extra columns when values contain separators.
-        safe_row = {k: ("" if v is None else str(v).replace("\n", " ") ) for k, v in dict(row).items()}
+        # Keep row keys strictly aligned to the CSV schema (fieldnames).
+        # This prevents column drift if incoming rows contain extra keys.
+        d = dict(row)
+        safe_row: Dict[str, Any] = {}
+        for k in fieldnames:
+            v = d.get(k, "")
+            safe_row[k] = "" if v is None else str(v).replace("\n", " ")
+
         buffer.append(safe_row)
 
         if len(buffer) >= int(flush_every):
@@ -159,6 +164,7 @@ def safe_append_prediction_to_csv(
     except Exception:
         # Logging must NEVER crash or slow training.
         return
+
 
 
 def flush_prediction_buffer(
@@ -177,6 +183,7 @@ def flush_prediction_buffer(
         return
 
 
+
 def append_prediction_to_csv(
     row: Mapping[str, Any],
     *,
@@ -185,6 +192,4 @@ def append_prediction_to_csv(
 ) -> None:
     """Append a single prediction row to a CSV file."""
     append_dicts_to_csv([row], csv_path=csv_path, fieldnames=fieldnames)
-
-
 
